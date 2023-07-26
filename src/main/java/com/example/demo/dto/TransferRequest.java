@@ -1,8 +1,6 @@
 package com.example.demo.dto;
 
-import com.example.demo.enums.TransactionType;
-
-public class BalanceActionRequest {
+public class TransferRequest {
 
     private Long sourceAccount;
 
@@ -10,9 +8,7 @@ public class BalanceActionRequest {
 
     private String pinCode;
 
-    private TransactionType transactionType;
-
-    private String amount;
+    private String cash;
 
     public Long getSourceAccount() {
         return sourceAccount;
@@ -38,19 +34,11 @@ public class BalanceActionRequest {
         this.pinCode = pinCode;
     }
 
-    public TransactionType getTransactionType() {
-        return transactionType;
+    public String getCash() {
+        return cash;
     }
 
-    public void setTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
+    public void setCash(String cash) {
+        this.cash = cash;
     }
 }
