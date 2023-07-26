@@ -1,11 +1,8 @@
 package com.example.demo.services;
 
 import com.example.demo.dao.AccountRepository;
-import com.example.demo.dao.TransactionHistoryRepository;
-import com.example.demo.dto.DepositRequest;
 import com.example.demo.dto.NewAccountRequest;
 import com.example.demo.dto.TransferRequest;
-import com.example.demo.dto.WithdrawRequest;
 import com.example.demo.entities.Account;
 import com.example.demo.entities.TransactionHistory;
 import com.example.demo.enums.TransactionType;
@@ -15,7 +12,6 @@ import com.example.demo.exceptions.WrongPinCodeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -50,7 +46,7 @@ public class AccountService implements AccountServiceI {
 
     @Override
     public Account getAccount(Long id) {
-        return accountRepository.findById(id).orElse(null);
+        return accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(String.valueOf(id)));
     }
 
     @Override

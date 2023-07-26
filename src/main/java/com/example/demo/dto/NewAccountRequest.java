@@ -2,11 +2,13 @@ package com.example.demo.dto;
 
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 
 public class NewAccountRequest {
 
+    @NotEmpty
     private String beneficiaryName;
 
     @Pattern(regexp = "^\\d{4}$")

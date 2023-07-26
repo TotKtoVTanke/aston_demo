@@ -1,7 +1,6 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dto.AccountDto;
-import com.example.demo.entities.Account;
 import com.example.demo.mapper.AccountMapper;
 import com.example.demo.services.AccountServiceI;
 import org.springframework.beans.factory.annotation.Autowired;

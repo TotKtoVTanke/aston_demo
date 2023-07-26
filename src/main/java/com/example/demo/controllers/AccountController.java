@@ -1,10 +1,8 @@
 package com.example.demo.controllers;
 
 
-
 import com.example.demo.dto.*;
 import com.example.demo.entities.Account;
-import com.example.demo.entities.TransactionHistory;
 import com.example.demo.mapper.TransactionHistoryMapper;
 import com.example.demo.services.AccountServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
