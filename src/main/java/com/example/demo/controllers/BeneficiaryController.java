@@ -1,6 +1,8 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dto.AccountDto;
+import com.example.demo.entities.Account;
+import com.example.demo.exceptions.BeneficiaryNotFoundException;
 import com.example.demo.mapper.AccountMapper;
 import com.example.demo.services.AccountServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,10 @@ public class BeneficiaryController {
     @RequestMapping(method = RequestMethod.GET, path = "/{name}")
     public List<AccountDto> receiveAccountsByBeneficiaryName(
             @PathVariable String name) {
-        return accountMapper.accountGetDtoList(accountService.getAccounts(name));
+        List<Account> result = accountService.getAccountsOfBeneficiary(name);
+        if (result.isEmpty()) {
+            throw new BeneficiaryNotFoundException("Beneficiary with the same name and with active accounts was not found");
+        }
+        return accountMapper.accountGetDtoList(result);
     }
 }

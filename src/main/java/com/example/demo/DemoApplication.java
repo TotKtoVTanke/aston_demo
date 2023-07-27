@@ -12,11 +12,4 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
-	@Bean(name="messageSource")
-	public ResourceBundleMessageSource bundleMessageSource() {
-		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-		messageSource.setBasename("messages");
-		return messageSource;
-	}
-
 }

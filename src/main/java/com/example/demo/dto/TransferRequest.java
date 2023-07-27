@@ -1,14 +1,18 @@
 package com.example.demo.dto;
 
+import javax.validation.constraints.Pattern;
+import java.math.BigDecimal;
+
 public class TransferRequest {
 
     private Long sourceAccount;
 
     private Long targetAccount;
 
+    @Pattern(regexp = "^\\d{4}$")
     private String pinCode;
 
-    private String cash;
+    private BigDecimal cash;
 
     public Long getSourceAccount() {
         return sourceAccount;
@@ -34,11 +38,11 @@ public class TransferRequest {
         this.pinCode = pinCode;
     }
 
-    public String getCash() {
+    public BigDecimal getCash() {
         return cash;
     }
 
-    public void setCash(String cash) {
+    public void setCash(BigDecimal cash) {
         this.cash = cash;
     }
 }

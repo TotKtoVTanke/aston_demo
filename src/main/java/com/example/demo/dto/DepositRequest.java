@@ -1,14 +1,16 @@
 package com.example.demo.dto;
 
+import java.math.BigDecimal;
+
 public class DepositRequest {
 
-    private String cashIn;
+    private BigDecimal cashIn;
 
-    public String getCashIn() {
+    public BigDecimal getCashIn() {
         return cashIn;
     }
 
-    public void setCashIn(String cashIn) {
+    public void setCashIn(BigDecimal cashIn) {
         this.cashIn = cashIn;
     }
 }

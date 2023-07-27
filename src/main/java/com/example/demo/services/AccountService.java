@@ -13,16 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.LockModeType;
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@Validated
 public class AccountService implements AccountServiceI {
 
     private AccountRepository accountRepository;
@@ -36,10 +33,14 @@ public class AccountService implements AccountServiceI {
     }
 
     @Override
-    public Account createNewAccount(@Valid NewAccountRequest accountPK) {
+    public Account createNewAccount(NewAccountRequest accountPK) {
         Account account = new Account();
-        account.setBeneficiaryName(accountPK.getBeneficiaryName());
-        account.setPinCode(accountPK.getPinCode());
+        String name = accountPK.getBeneficiaryName();
+       // validateName(name);
+        account.setBeneficiaryName(name);
+        String pinCode = accountPK.getPinCode();
+       // validatePinFormat(pinCode);
+        account.setPinCode(pinCode);
         account = accountRepository.save(account);
         return account;
     }
@@ -53,7 +54,7 @@ public class AccountService implements AccountServiceI {
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void deposit(Long id, BigDecimal cashIn) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(String.valueOf(id)));
+        Account account = getAccount(id);
         BigDecimal currentBalance = account.getBalance()!=null?account.getBalance():new BigDecimal("0");
         currentBalance = currentBalance.add(cashIn);
         account.setBalance(currentBalance);
@@ -64,7 +65,7 @@ public class AccountService implements AccountServiceI {
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void withdraw(Long id, String incomePin, BigDecimal cashOut) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(String.valueOf(id)));
+        Account account = getAccount(id);
         validatePinCode(incomePin, account.getPinCode());
         BigDecimal currentBalance = account.getBalance()!=null?account.getBalance():new BigDecimal("0");
         if (cashOut.compareTo(currentBalance) > 0) throw new InsufficientFundsException(String.valueOf(id));
@@ -77,13 +78,13 @@ public class AccountService implements AccountServiceI {
     @Transactional()
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void transfer(TransferRequest transferRequest) {
-        BigDecimal cash = new BigDecimal(transferRequest.getCash());
+        BigDecimal cash = transferRequest.getCash();
         withdraw(transferRequest.getSourceAccount(), transferRequest.getPinCode(), cash);
         deposit(transferRequest.getTargetAccount(), cash);
     }
 
     @Override
-    public List<Account> getAccounts(String beneficiaryName) {
+    public List<Account> getAccountsOfBeneficiary(String beneficiaryName) {
         return accountRepository.getAllByBeneficiaryName(beneficiaryName);
     }
 
@@ -97,7 +98,16 @@ public class AccountService implements AccountServiceI {
         accountRepository.save(account);
     }
 
+/*    private void validatePinFormat(String incomePin) {
+        if (!incomePin.matches("^\\d{4}$")) throw new WrongPinCodeException();
+    }*/
+
     private void validatePinCode(String incomePin, String currentPin) {
+       // validatePinFormat(incomePin);
         if (!incomePin.equals(currentPin)) throw new WrongPinCodeException();
     }
+
+/*    private void validateName(String name) {
+        if (name == null || name.isBlank()) throw new WrongUserInfoException("Wrong name of beneficiary");
+    }*/
 }

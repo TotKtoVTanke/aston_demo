@@ -1,7 +1,5 @@
 package com.example.demo.dto;
 
-import org.springframework.stereotype.Component;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 

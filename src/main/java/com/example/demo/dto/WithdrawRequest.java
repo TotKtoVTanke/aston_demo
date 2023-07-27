@@ -1,10 +1,12 @@
 package com.example.demo.dto;
 
+import java.math.BigDecimal;
+
 public class WithdrawRequest {
 
     private String pinCode;
 
-    private String cashOut;
+    private BigDecimal cashOut;
 
     public String getPinCode() {
         return pinCode;
@@ -14,11 +16,11 @@ public class WithdrawRequest {
         this.pinCode = pinCode;
     }
 
-    public String getCashOut() {
+    public BigDecimal getCashOut() {
         return cashOut;
     }
 
-    public void setCashOut(String cashOut) {
+    public void setCashOut(BigDecimal cashOut) {
         this.cashOut = cashOut;
     }
 }
