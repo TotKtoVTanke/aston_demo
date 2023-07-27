@@ -1,7 +1,11 @@
 package com.example.demo.controllers;
 
 
-import com.example.demo.dto.*;
+import com.example.demo.dto.DepositRequest;
+import com.example.demo.dto.NewAccountRequest;
+import com.example.demo.dto.TransactionHistoryDto;
+import com.example.demo.dto.TransferRequest;
+import com.example.demo.dto.WithdrawRequest;
 import com.example.demo.mapper.TransactionHistoryMapper;
 import com.example.demo.services.AccountServiceI;
 import org.springframework.beans.factory.annotation.Autowired;

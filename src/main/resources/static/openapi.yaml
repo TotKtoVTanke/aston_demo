@@ -1,0 +1,215 @@
+---
+openapi: 3.0.1
+info:
+  title: Backend Developer Practical Test Api
+  description: This is a RESTful API of a backend service for creating bank accounts and transferring money between them.
+  contact:
+    name: Urakchintsev Pavel
+    email: aker007@yandex.dev
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+    description: Generated server url
+paths:
+  "/api/accounts/{id}/withdraw":
+    put:
+      tags:
+        - account-controller
+      summary: withdraw money from account
+      operationId: withdraw
+      parameters:
+        - name: id
+          in: path
+          description: id of account
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/WithdrawRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/accounts/{id}/deposit":
+    put:
+      tags:
+        - account-controller
+      summary: deposit money to account
+      operationId: deposit
+      parameters:
+        - name: id
+          in: path
+          description: id of account
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/DepositRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/accounts/transfer":
+    put:
+      tags:
+        - account-controller
+      summary: transfer money between accounts
+      operationId: transfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/TransferRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/accounts":
+    post:
+      tags:
+        - account-controller
+      summary: adding a new account
+      operationId: createNewAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/NewAccountRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: integer
+                format: int64
+  "/api/beneficiaries/{name}":
+    get:
+      tags:
+        - beneficiary-controller
+      summary: getting information about all accounts of the benefeciary
+      operationId: receiveAccountsByBeneficiaryName
+      parameters:
+        - name: name
+          in: path
+          description: name of beneficiary
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/AccountDto"
+  "/api/accounts/{id}/history":
+    get:
+      tags:
+        - account-controller
+      summary: getting information about all transactions of account
+      operationId: getTransactions
+      parameters:
+        - name: id
+          in: path
+          description: account id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/TransactionHistoryDto"
+components:
+  schemas:
+    WithdrawRequest:
+      type: object
+      properties:
+        pinCode:
+          type: string
+          description: pin code of account
+        cashOut:
+          type: number
+          description: amount to be withdraw
+    DepositRequest:
+      type: object
+      properties:
+        cashIn:
+          type: number
+    TransferRequest:
+      type: object
+      properties:
+        sourceAccount:
+          type: integer
+          format: int64
+        targetAccount:
+          type: integer
+          format: int64
+        pinCode:
+          pattern: "^\\d{4}$"
+          type: string
+        cash:
+          type: number
+    NewAccountRequest:
+      required:
+        - beneficiaryName
+      type: object
+      properties:
+        beneficiaryName:
+          type: string
+        pinCode:
+          pattern: "^\\d{4}$"
+          type: string
+    AccountDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        beneficiaryName:
+          type: string
+        balance:
+          type: string
+    TransactionHistoryDto:
+      type: object
+      properties:
+        transactionDateTime:
+          type: string
+          format: date-time
+        transactionType:
+          type: string
+          enum:
+            - DEPOSIT
+            - WITHDRAW
+            - TRANSFER
+        change:
+          type: number
