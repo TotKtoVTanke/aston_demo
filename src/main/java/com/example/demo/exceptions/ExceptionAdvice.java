@@ -1,8 +1,5 @@
-package com.example.demo.controllers;
+package com.example.demo.exceptions;
 
-import com.example.demo.exceptions.AccountNotFoundException;
-import com.example.demo.exceptions.BeneficiaryNotFoundException;
-import com.example.demo.exceptions.WrongUserInfoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

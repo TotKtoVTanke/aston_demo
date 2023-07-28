@@ -2,15 +2,13 @@ package com.example.demo.controllers;
 
 import com.example.demo.dto.AccountDto;
 import com.example.demo.entities.Account;
-import com.example.demo.exceptions.BeneficiaryNotFoundException;
-import com.example.demo.mapper.AccountMapper;
-import com.example.demo.services.AccountServiceI;
+import com.example.demo.mappers.AccountMapper;
+import com.example.demo.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,26 +16,20 @@ import java.util.List;
 @RequestMapping("api/beneficiaries")
 public class BeneficiaryController {
 
-    AccountServiceI accountService;
+    private final AccountService accountService;
 
-    AccountMapper accountMapper;
-
-    private final MessageSource messageSource;
+    private final AccountMapper accountMapper;
 
     @Autowired
-    public BeneficiaryController(AccountServiceI accountService, AccountMapper accountMapper, MessageSource messageSource) {
+    public BeneficiaryController(AccountService accountService, AccountMapper accountMapper) {
         this.accountService = accountService;
         this.accountMapper = accountMapper;
-        this.messageSource = messageSource;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/{name}")
-    public List<AccountDto> receiveAccountsByBeneficiaryName(
+    @GetMapping(path = "/{name}")
+    public ResponseEntity<List<AccountDto>> receiveAccountsByBeneficiaryName(
             @PathVariable String name) {
         List<Account> result = accountService.getAccountsOfBeneficiary(name);
-        if (result.isEmpty()) {
-            throw new BeneficiaryNotFoundException("Beneficiary with the same name and with active accounts was not found");
-        }
-        return accountMapper.accountGetDtoList(result);
+        return new ResponseEntity<>(accountMapper.accountGetDtoList(result), HttpStatus.OK);
     }
 }
